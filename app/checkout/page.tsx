@@ -1,0 +1,188 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Button from "../common/components/buttons/Button";
+import { useRouter } from "next/navigation";
+
+
+type productProps = {
+    _id: string,
+    images: string[],
+    name: string,
+    price: number,
+    stock: number,
+}
+
+type userProps = {
+    _id: string,
+    name: string,
+    phone: string,
+    couponse: string[],
+    email: string,
+    itemsInCart: productProps[],
+    ordersPlaced: string[],
+}
+
+const Checkout = () => {
+    const [user, setUser] = useState<userProps | null>(null)
+
+    const [totalPrice, setTotalPrice] = useState<number>(0)
+
+    const [loadingForCheckout, setLoadingForCheckout] = useState<boolean>(false)
+
+    const [loadingForCoupon, setLoadingForCoupon] = useState<boolean>(false)
+
+    const [couponCode, setCouponCode] = useState<string>("")
+
+    const router = useRouter()
+
+    // function to get user data.
+    const getUserDetails = async () => {
+        // get user details from database.
+        const response = await fetch("http://127.0.0.1:5000/api/get-user-data?user_id=6575cd4da6351f768c350732", {
+            method: "GET"
+        });
+
+        // get json response from the api.
+        const res = await response.json();
+
+        // if status is 200 then set user data in state.
+        if (res.status_code === 200) {
+            // set user state
+            setUser(res.data)
+
+            if (res.data.itemsInCart.length > 0) {
+                let total = 0
+                res.data.itemsInCart.forEach((item: productProps) => {
+                    total += item.price
+                })
+                setTotalPrice(total)
+            }
+        }
+    }
+
+    const completeOrder = async () => {
+        // set loading to true
+        setLoadingForCheckout(true)
+
+        // call api to complete the order
+        const response = await fetch("http://127.0.0.1:5000/api/complete-order?user_id=6575cd4da6351f768c350732", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: user ? user._id : null,
+                coupon_code: couponCode ? couponCode : null
+            })
+        })
+
+        // get json response from the api.
+        const res = await response.json();
+
+        // if status is 200 then set user data in state.
+        if (res.status_code === 200) {
+            // set user state
+            setLoadingForCheckout(false)
+
+            // push to success page
+            router.push('/success')
+        }
+        else {
+            // set user state
+            setLoadingForCheckout(false)
+
+            // push to failure page
+            router.push('/fail')
+        }
+    }
+
+    const applyCoupon = async () => {
+        // set loading to true
+        setLoadingForCoupon(true)
+
+        // call api to get coupon
+        const response = await fetch("http://127.0.0.1:5000/api/generate-coupon-code", {
+            method: "GET",
+        })
+
+        // get json response from the api.
+        const res = await response.json();
+
+        // if status is 200 then set user data in state.
+        if (res.status_code === 200) {
+            // set user state
+            setLoadingForCoupon(false)
+
+            // set coupon code
+            setCouponCode(res.data)
+        }
+        else {
+            // set laoding state to false
+            setLoadingForCoupon(false)
+
+            alert("Coupon code generation failed!")
+        }
+    }
+
+
+    // hook to set user data and get available products.
+    useEffect(() => {
+        getUserDetails()
+    }, [])
+
+    return (
+        <div className="max-w-5xl pt-12 m-auto">
+            {user && <>
+                <div>
+                    <h1 className="text-xl text-neutral-700 font-semibold">Hi, {user && user.name}</h1>
+                    <p className="text-lg text-neutral-700">Proceed to checkout</p>
+                </div>
+                {user && user.itemsInCart.length > 0 ?
+                    <div>
+                        {user.itemsInCart.map((item, index) => {
+
+                            return (
+                                <div key={index} className="border border-neutral-200 rounded-xl w-full px-4 py-4 mt-4">
+                                    <div className="flex justify-between">
+                                        <div className="relative w-32 h-16">
+                                            <Image
+                                                fill
+                                                alt="Product image"
+                                                src={item.images && item.images.length > 0 ? item.images[0] : '/images/placeholder.png'}
+                                                className="rounded-xl"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <p className="text-base text-neutral-700 font-medium">{item.name}</p>
+                                            <p className="text-base text-neutral-700 font-medium">{item.price}$</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                        <div className="mt-4 flex justify-end">
+                            <div className="flex justify-end flex-col">
+                                <p className="text-lg mb-2">{couponCode ? "Discounted Price: " : "Total Order Value:"}<span className="font-semibold">{couponCode ? <span className="font-bold text-[#5359ea]">{totalPrice - 0.1 * totalPrice}</span> : totalPrice}</span></p>
+                                {user.ordersPlaced.length % 2 != 0 ?
+                                    <div className="mb-2">
+                                        {couponCode ? <p className="text-base text-neutral-700 font-medium mb-2">Coupon Code: <span className="font-semibold">{couponCode}</span></p> :
+                                            <Button appearance="Primary" width="w-full" loading={loadingForCoupon} onClick={() => applyCoupon()}>Apply Coupon</Button>}
+                                    </div> : <p className="text-base text-neutral-700 font-medium mb-2">Complete 1 order to get a coupon.</p>}
+                                <div className="mb-2">
+                                    <Button appearance="Primary" width="w-full" loading={loadingForCheckout} onClick={() => completeOrder()}>Complete Order</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    <p className="text-lg text-neutral-700 font-medium">No items present in cart!</p>
+                }
+            </>
+            }
+        </div>
+    )
+}
+
+export default Checkout
