@@ -74,7 +74,7 @@ const Checkout = () => {
         setLoadingForCheckout(true)
 
         // call api to complete the order
-        const response = await fetch("https://uniblox-assgn.onrender.com/api/complete-order?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/complete-order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

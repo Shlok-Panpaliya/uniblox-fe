@@ -94,8 +94,8 @@ const MobileStore = () => {
 
                     {/* Assignment rules */}
                     <div className="mt-12">
-                        <p className="text-neutral-700 text-lg font-semibold">Value of n has been taken as 3 for testing purpose but it can be set to any value required from database for each user.</p>
-                        <p className="text-neutral-700 text-lg font-semibold mb-4">Once you place order for 3rd, 6th, 9th,.. time you will get a discount of 10%</p>
+                        <p className="text-neutral-700 text-lg font-semibold">Value of n has been taken as 2 for testing purpose but it can be set to any value required from database for each user.</p>
+                        <p className="text-neutral-700 text-lg font-semibold mb-4">Once you place order for 2rd, 4th, 6th,.. time you will get a discount of 10%</p>
                     </div>
                 </>
             }
