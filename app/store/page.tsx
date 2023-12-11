@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ItemCard from "../components/ItemCard"
-import { useRouter } from "next/navigation";
 
 type userProps = {
     _id: string,
@@ -23,13 +22,16 @@ type productProps = {
 }
 
 const MobileStore = () => {
+    // state to store user.
     const [user, setUser] = useState<userProps | null>(null)
 
+    // state to store products.
     const [products, setProducts] = useState<productProps[] | null>(null)
 
+    // function to get available products.
     const getAvailableProducts = async () => {
         // get items from database to be shown on listing
-        const response = await fetch("http://127.0.0.1:5000/api/get-all-products?available=Yes", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-all-products?available=Yes", {
             method: "GET"
         }
         );
@@ -46,7 +48,7 @@ const MobileStore = () => {
     // function to get user data.
     const getUserDetails = async () => {
         // get user details from database.
-        const response = await fetch("http://127.0.0.1:5000/api/get-user-data?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cd4da6351f768c350732", {
             method: "GET"
         });
 

@@ -21,7 +21,7 @@ const ItemCard = ({ name, price, images, productId, userId, getUserDetails }: In
         setAddItemLoading(true)
 
         // add item to cart
-        const res = await fetch("http://127.0.0.1:5000/api/add-items-to-cart", {
+        const res = await fetch("https://uniblox-assgn.onrender.com/api/add-items-to-cart", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -61,7 +61,7 @@ const ItemCard = ({ name, price, images, productId, userId, getUserDetails }: In
                 <p className="text-base text-neutral-700 font-medium">{price}$</p>
             </div>
             <div className="w-full my-4">
-                <Button width="w-full" appearance="Primary" onClick={async () => await addItemToCart()} loading={addItemloading}>Add to cart</Button>
+                <Button disabled={addItemloading} width="w-full" appearance="Primary" onClick={async () => await addItemToCart()} loading={addItemloading}>Add to cart</Button>
             </div>
         </div>
     )

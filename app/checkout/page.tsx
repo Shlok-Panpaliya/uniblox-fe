@@ -25,22 +25,28 @@ type userProps = {
 }
 
 const Checkout = () => {
+    // state to store user.
     const [user, setUser] = useState<userProps | null>(null)
 
+    // state to store total price of products.
     const [totalPrice, setTotalPrice] = useState<number>(0)
 
+    // state to store loading state for checkout button.
     const [loadingForCheckout, setLoadingForCheckout] = useState<boolean>(false)
 
+    // state to store loading state for coupon button.
     const [loadingForCoupon, setLoadingForCoupon] = useState<boolean>(false)
 
+    // state to store coupon code.
     const [couponCode, setCouponCode] = useState<string>("")
 
+    // router hook
     const router = useRouter()
 
     // function to get user data.
     const getUserDetails = async () => {
         // get user details from database.
-        const response = await fetch("http://127.0.0.1:5000/api/get-user-data?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cd4da6351f768c350732", {
             method: "GET"
         });
 
@@ -62,12 +68,13 @@ const Checkout = () => {
         }
     }
 
+    // function to complete order.
     const completeOrder = async () => {
         // set loading to true
         setLoadingForCheckout(true)
 
         // call api to complete the order
-        const response = await fetch("http://127.0.0.1:5000/api/complete-order?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/complete-order?user_id=6575cd4da6351f768c350732", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -98,12 +105,13 @@ const Checkout = () => {
         }
     }
 
+    // function to apply coupon.
     const applyCoupon = async () => {
         // set loading to true
         setLoadingForCoupon(true)
 
         // call api to get coupon
-        const response = await fetch("http://127.0.0.1:5000/api/generate-coupon-code", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/generate-coupon-code", {
             method: "GET",
         })
 
@@ -168,10 +176,10 @@ const Checkout = () => {
                                 {user.ordersPlaced.length % 2 != 0 ?
                                     <div className="mb-2">
                                         {couponCode ? <p className="text-base text-neutral-700 font-medium mb-2">Coupon Code: <span className="font-semibold">{couponCode}</span></p> :
-                                            <Button appearance="Primary" width="w-full" loading={loadingForCoupon} onClick={() => applyCoupon()}>Apply Coupon</Button>}
+                                            <Button disabled={loadingForCoupon} appearance="Primary" width="w-full" loading={loadingForCoupon} onClick={() => applyCoupon()}>Apply Coupon</Button>}
                                     </div> : <p className="text-base text-neutral-700 font-medium mb-2">Complete 1 order to get a coupon.</p>}
                                 <div className="mb-2">
-                                    <Button appearance="Primary" width="w-full" loading={loadingForCheckout} onClick={() => completeOrder()}>Complete Order</Button>
+                                    <Button disabled={loadingForCheckout} appearance="Primary" width="w-full" loading={loadingForCheckout} onClick={() => completeOrder()}>Complete Order</Button>
                                 </div>
                             </div>
                         </div>
