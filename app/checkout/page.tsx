@@ -46,7 +46,7 @@ const Checkout = () => {
     // function to get user data.
     const getUserDetails = async () => {
         // get user details from database.
-        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cdee91036adf33e8dbb7", {
             method: "GET"
         });
 
@@ -142,13 +142,14 @@ const Checkout = () => {
 
     return (
         <div className="max-w-5xl pt-12 m-auto">
-            {user && <>
+            {user ? <>
                 <div>
                     <h1 className="text-xl text-neutral-700 font-semibold">Hi, {user && user.name}</h1>
-                    <p className="text-lg text-neutral-700">Proceed to checkout</p>
+                    
                 </div>
                 {user && user.itemsInCart.length > 0 ?
                     <div>
+                        <p className="text-lg text-neutral-700">Proceed to checkout</p>
                         {user.itemsInCart.map((item, index) => {
 
                             return (
@@ -173,7 +174,7 @@ const Checkout = () => {
                         <div className="mt-4 flex justify-end">
                             <div className="flex justify-end flex-col">
                                 <p className="text-lg mb-2">{couponCode ? "Discounted Price: " : "Total Order Value:"}<span className="font-semibold">{couponCode ? <span className="font-bold text-[#5359ea]">{totalPrice - 0.1 * totalPrice}</span> : totalPrice}</span></p>
-                                {user.ordersPlaced.length % 2 != 0 ?
+                                {(user.ordersPlaced.length + 1) % 2 == 0 ?
                                     <div className="mb-2">
                                         {couponCode ? <p className="text-base text-neutral-700 font-medium mb-2">Coupon Code: <span className="font-semibold">{couponCode}</span></p> :
                                             <Button disabled={loadingForCoupon} appearance="Primary" width="w-full" loading={loadingForCoupon} onClick={() => applyCoupon()}>Apply Coupon</Button>}
@@ -187,7 +188,7 @@ const Checkout = () => {
                     :
                     <p className="text-lg text-neutral-700 font-medium">No items present in cart!</p>
                 }
-            </>
+            </> :  <div className="text-xl font-medium text-neutral-700">Loading...</div>
             }
         </div>
     )

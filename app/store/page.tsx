@@ -48,7 +48,7 @@ const MobileStore = () => {
     // function to get user data.
     const getUserDetails = async () => {
         // get user details from database.
-        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cd4da6351f768c350732", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-user-data?user_id=6575cdee91036adf33e8dbb7", {
             method: "GET"
         });
 
@@ -71,7 +71,7 @@ const MobileStore = () => {
     return (
         <div className="max-w-5xl pt-12 m-auto">
             {/* Header */}
-            {user &&
+            {user ?
                 <>
                     <div className="flex justify-between">
                         <p className="text-neutral-700 text-2xl font-semibold mb-4">Welcome, {user && user.name}</p>
@@ -98,6 +98,8 @@ const MobileStore = () => {
                         <p className="text-neutral-700 text-lg font-semibold mb-4">Once you place order for 2rd, 4th, 6th,.. time you will get a discount of 10%</p>
                     </div>
                 </>
+                : 
+                <div className="text-xl font-medium text-neutral-700">Loading...</div>
             }
         </div>
     )
