@@ -90,18 +90,18 @@ const Checkout = () => {
 
         // if status is 200 then set user data in state.
         if (res.status_code === 200) {
-            // set user state
-            setLoadingForCheckout(false)
-
             // push to success page
             router.push('/success')
-        }
-        else {
+
             // set user state
             setLoadingForCheckout(false)
-
+        }
+        else {
             // push to failure page
             router.push('/fail')
+
+            // set loadi ng state to false
+            setLoadingForCheckout(false)
         }
     }
 
@@ -145,7 +145,7 @@ const Checkout = () => {
             {user ? <>
                 <div>
                     <h1 className="text-xl text-neutral-700 font-semibold">Hi, {user && user.name}</h1>
-                    
+
                 </div>
                 {user && user.itemsInCart.length > 0 ?
                     <div>
@@ -188,7 +188,7 @@ const Checkout = () => {
                     :
                     <p className="text-lg text-neutral-700 font-medium">No items present in cart!</p>
                 }
-            </> :  <div className="text-xl font-medium text-neutral-700">Loading...</div>
+            </> : <div className="text-xl font-medium text-neutral-700">Loading...</div>
             }
         </div>
     )
