@@ -23,7 +23,7 @@ const MobileStore = () => {
     // function to get user data.
     const getOrdersSummary = async () => {
         // get user details from database.
-        const response = await fetch("http://127.0.0.1:5000/api/get-orders-summary", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/get-orders-summary", {
             method: "GET"
         });
 

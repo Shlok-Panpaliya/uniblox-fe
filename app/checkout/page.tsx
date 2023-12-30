@@ -75,7 +75,7 @@ const Checkout = () => {
 
         // call api to complete the order
         // https://uniblox-assgn.onrender.com
-        const response = await fetch("http://127.0.0.1:5000/api/complete-order", {
+        const response = await fetch("https://uniblox-assgn.onrender.com/api/complete-order", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
